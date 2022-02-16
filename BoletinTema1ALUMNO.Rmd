@@ -92,22 +92,31 @@ b.  Usa las funciones **dim, head, tail, str** para una primera visión de los c
 c.  Muestra los nombres de las filas y las columnas (**rownames**, **colnames**)
 
 ```{r}
+mammals <- mammals
+animals2 <- Animals2
+# a)
+help("mammals")
+#Brain and Body Weights for 62 Species of Land Mammals
+help("Animals2")
+#Brain and Body Weights for 65 Species of Land Animals
 
+# b)
+dim(mammals)
+head(mammals)
+tail(mammals)
+str(mammals)
 
+dim(animals2)
+head(animals2)
+tail(animals2)
+str(animals2)
 
+# c)
+rownames(mammals)
+colnames(mammals)
 
-
-
-
-
-
-
-
-
-
-
-
-
+rownames(animals2)
+colnames(animals2)
 
 ```
 
@@ -115,10 +124,7 @@ d.  Usa la función **intersect** y almacena en la variable *commonAnimals* los 
 
 ```{r}
 
-
-
-
-
+commonAnimals <- intersect(animals2, mammals)
 
 ```
 
@@ -126,10 +132,9 @@ e.  Usa **setdiff** para averiguar qué animales no están en ambos conjuntos. �
 
 ```{r}
 
-
-
-
-
+setdiff(animals2, mammals)
+# Los animales que no se encuentran en ambas listas son 3 dinosaurios: 
+# El diplodocus, el triceratops y el brancosaurio.
 
 ```
 
@@ -144,16 +149,16 @@ e.  Determina las diferencia entre los animales que no aparecen en ambos conjunt
 
 
 
-
-
-
-
 ```
 
 2.  La funcion **qqPlot** del paquete **car** puede ser utilizada para determinar gráficamente si una serie de puntos siguen una distribución de datos Gaussiana. Si las muestras están dentro de las líneas discontinuas podemos indicar que siguen una distribución Gaussiana con un 95 % de confianza. Utilizando esta función representa el logaritmo neperiano (**log**) del peso del cerebro (**brain weigths**) del registro de datos **mammals** del paquete **MASS** y conjunto de datos **Animals2** de la librería **robustbase**. ¿Presentan el mismo comportamiento ?.¿Podríamos decir que siguen una distribución Gaussiana ?
 
 ```{r}
+qqPlot(log(mammals$brain))
+qqPlot(log(animals2$brain))
 
+# Ambas se encuentran dentro del rango por lo que podemos afirmar que siguen 
+# distribuciones gaussianas
 
 ```
 
@@ -163,18 +168,19 @@ e.  Determina las diferencia entre los animales que no aparecen en ambos conjunt
     b.  Uno de los elementos de la lista es un matriz de caracteres. Muestra por pantalla los 5 primeros elementos de esta matriz usando la función **head**.
     c.  Determina el número de librerías que tienes instaladas.
 
-    ```{r}
+```{r}
+# a)
+libReturn <- library()
+libReturn
 
+# b)
+head(libReturn$results, 5)
 
+# c)
+nrow(libReturn$results) 
+# 219 librerias instaladas
 
-
-
-
-
-
-
-
-    ```
+```
 
 4.  En las transparencias del tema 1 se citan los primeros pasos a seguir cuando se analiza un nuevo conjunto de datos.
 
@@ -184,50 +190,57 @@ e.  Determina las diferencia entre los animales que no aparecen en ambos conjunt
     d.  Utiliza la función **summary**, sobre **cabbages** y **Chile** y observa como, además de otros estadísticos, también devuelve el número de valores perdidos de cada variable.
 
 ```{r}
+# a)
+head(cabbages)
+dim(cabbages)
+tail(cabbages)
+glimpse(cabbages)
+str(cabbages)
 
+# b)
+is.na(cabbages$Cult)
+is.na(cabbages$Date)
+is.na(cabbages$HeadWt)
+is.na(cabbages$VitC)
+# Ninguna de las variables del conjunto cabbages contiene valores NA
 
+# c)
+head(Chile)
+dim(Chile)
+tail(Chile)
+glimpse(Chile)
+str(Chile)
 
+sum(is.na(Chile))
+# Existen 295 valores perdidos en el conjunto Chile
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# d)
+summary(cabbages)
+summary(Chile)
 
 ```
 
 5.  Muchas pruebas estadísticas suponen que los datos siguen una distribución Gaussiana. Utiliza la aproximación visual proporcionada por **qqPlot** para determinar si podemos asumir que las variables **HeadWt** y **VitC** del conjunto **cabbages** verifican esta condición.
 
 ```{r}
-
-
-
-
+qqPlot(cabbages$HeadWt)
+qqPlot(cabbages$VitC)
+# Ambas se ajustan adecuadamente a la curva.
 
 ```
 
 6.  Una representación habitual, para determinar la distribución de los datos de una variable cuantitativa es el histograma (**hist**). Determina, de forma aproximada, utilizando el histograma, si hay diferencias entre los contenidos de vitamina C (**VitC**), para las diferentes variedades de calabaza (variable **Cult**), en el conjunto de datos **cabbages**.
 
 ```{r}
+cultivos <- levels (cabbages$Cult)
 
+hist(cabbages[which(cabbages$Cult==cultivos[1]),]$VitC, main = "VitC in c39",
+     col = "red", xlab = "Vitamina C")
+hist(cabbages[which(cabbages$Cult==cultivos[2]),]$VitC, main = "VitC in c52",
+     col = "cyan", xlab = "Vitamina C")
 
+# Se puede observar como el segundo tipo de cultivo c52 tiene valores de vitamina
+# C mas elevados en general
 
 ```
 
@@ -237,7 +250,7 @@ e.  Determina las diferencia entre los animales que no aparecen en ambos conjunt
 #Diagrama de dispersión global.
 plot(whiteside$Temp, whiteside$Gas)
 #Diagrama de dispersión etiquetando según un factor.
-plot(whiteside$Temp, whiteside$Gas, pch=c(6,16)[whiteside\$Insul])
+plot(whiteside$Temp, whiteside$Gas, pch=c(6,16)[whiteside$Insul])
 legend(x="topright",legend=c("Insul = Before","Insul = After"), pch=c(6,16))
 # Planteamos 2 modelos lineales, uno para los datos de cada factor
 Model1 <- lm(Gas ~ Temp, data = whiteside, subset = which(Insul == "Before"))
@@ -247,39 +260,30 @@ abline(Model1, lty=2)
 abline(Model2)
 ```
 
+a.  Utiliza un procedimiento análogo para determinar si se aprecia una relación lineal entre los niveles de vitamina C, **VitC** en función del peso de la calabaza, **HeadWt**, en el conjunto de datos **cabbages**.
+
 ```{r,echo=T,include=T,eval=F}
 
-
-
-
-
-
-
-
-
-
-
+plot(cabbages$VitC, cabbages$HeadWt)
+# Se observa una cierta correlacion pero no parece ser especialmente fuerte
 
 ```
 
-a.  Utiliza un procedimiento análogo para determinar si se aprecia una relación lineal entre los niveles de vitamina C, **VitC** en función del peso de la calabaza, **HeadWt**, en el conjunto de datos **cabbages**.
+
 b.  Repite el apartado anterior, pero obteniendo un modelo para cada una de las dos variedades de calabaza, **Cult**. Ver[Parámetros básicos plot](https://www.statmethods.net/advgraphs/parameters.html).
 
 ```{r}
+cultivos <- levels(cabbages$Cult)
 
+c39 <- plot(cabbages[which(cabbages$Cult == cultivos[1]),]$VitC,
+              cabbages[which(cabbages$Cult == cultivos[1]),]$HeadWt, pch = 16)
+c39
 
-
-
-
-
-
-
-
-
-
-
-
-
+c52 <- plot(cabbages[which(cabbages$Cult == cultivos[2]),]$VitC,
+              cabbages[which(cabbages$Cult == cultivos[2]),]$HeadWt, pch = 15)
+c52
+# Se puede observar claramente como la segunda variedad tiene una mayor 
+# correlacion que la primera
 
 
 ```
